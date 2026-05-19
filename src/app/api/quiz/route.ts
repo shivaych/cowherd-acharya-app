@@ -107,7 +107,8 @@ Module topic mapping:
 
   async function runGeneration() {
     const result = await generateObject({
-      model: google(MODEL, { thinkingConfig: { thinkingBudget: 0 } }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      model: (google as any)(MODEL, { thinkingConfig: { thinkingBudget: 0 } }),
       schema: QuizSchema,
       prompt,
       maxOutputTokens: 4096,
