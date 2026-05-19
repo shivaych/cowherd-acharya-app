@@ -1,0 +1,16 @@
+{
+  "name": "গোপাল আচার্য — KarmYog Vatika Training",
+  "short_name": "Gopal",
+  "description": "KarmYog Vatika Sales & Service training playbook — trilingual, Ask Gopal anything",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFBF6",
+  "theme_color": "#264E2E",
+  "icons": [
+    {
+      "src": "/brand/cowherd-avatar.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
