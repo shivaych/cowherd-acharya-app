@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db, dbConfigured } from "@/lib/server/supabase";
+import { dbAcharya, dbConfigured } from "@/lib/server/supabase";
 import { requireAdmin } from "@/lib/server/auth";
 
 export async function GET() {
@@ -8,41 +8,57 @@ export async function GET() {
 
   if (!dbConfigured) return NextResponse.json({ modules: [] });
 
-  const { data: mods, error } = await db
-    .from("cowherd_modules")
-    .select("*")
+  const { data, error } = await dbAcharya
+    .from("crs_modules")
+    .select(`
+      id, slug, sort_order, theory_hours, practical_hours,
+      icon, group_key, group_label_en, group_label_bn, group_label_hi,
+      crs_module_tr ( lang, title, short_desc, status ),
+      crs_sections ( id, crs_section_tr ( id, body, status ) )
+    `)
+    .eq("is_deleted", false)
     .order("sort_order");
+
   if (error) {
     return NextResponse.json({ error: "Failed to load modules" }, { status: 502 });
   }
-  if (!mods) return NextResponse.json({ modules: [] });
 
-  const [{ data: sections }, { data: contents }] = await Promise.all([
-    db.from("cowherd_sections").select("module_id"),
-    db
-      .from("cowherd_content")
-      .select("section_id, cowherd_sections!inner(module_id)")
-      .eq("status", "published"),
-  ]);
+  type RawTr = { lang: string; title: string | null; short_desc: string | null; status: string | null };
+  type RawSectionTr = { id: string; body: string | null; status: string | null };
+  type RawSection = { id: string; crs_section_tr: RawSectionTr[] };
+  type RawModule = {
+    id: string; slug: string; sort_order: number;
+    theory_hours: number | null; practical_hours: number | null;
+    icon: string | null; group_key: string | null;
+    group_label_en: string | null; group_label_bn: string | null; group_label_hi: string | null;
+    crs_module_tr: RawTr[];
+    crs_sections: RawSection[];
+  };
 
-  const sectionCount: Record<string, number> = {};
-  (sections || []).forEach((s: { module_id: string }) => {
-    sectionCount[s.module_id] = (sectionCount[s.module_id] || 0) + 1;
+  const modules = (data as RawModule[] || []).map((m) => {
+    const pick = (l: string) => m.crs_module_tr.find((t) => t.lang === l);
+    const en = pick("en"); const bn = pick("bn"); const hi = pick("hi");
+    const sectionCount = m.crs_sections.length;
+    const contentCount = m.crs_sections.reduce((acc, s) => {
+      return acc + s.crs_section_tr.filter((t) => t.body && t.status === "published").length;
+    }, 0);
+    return {
+      id: m.slug,
+      title_en: en?.title || "",
+      title_bn: bn?.title || en?.title || "",
+      title_hi: hi?.title || en?.title || "",
+      icon: m.icon,
+      sort_order: m.sort_order,
+      theory_hours: m.theory_hours ?? 0,
+      practical_hours: m.practical_hours ?? 0,
+      group_key: m.group_key || "general",
+      group_label_en: m.group_label_en || "",
+      group_label_bn: m.group_label_bn || "",
+      group_label_hi: m.group_label_hi || "",
+      sectionCount,
+      contentCount,
+    };
   });
 
-  const contentCount: Record<string, number> = {};
-  (contents || []).forEach((c: unknown) => {
-    const cc = c as { cowherd_sections?: { module_id: string } | { module_id: string }[] };
-    const sec = Array.isArray(cc.cowherd_sections) ? cc.cowherd_sections[0] : cc.cowherd_sections;
-    const mid = sec?.module_id;
-    if (mid) contentCount[mid] = (contentCount[mid] || 0) + 1;
-  });
-
-  const enriched = mods.map((m: { id: string; [k: string]: unknown }) => ({
-    ...m,
-    sectionCount: sectionCount[m.id] || 0,
-    contentCount: contentCount[m.id] || 0,
-  }));
-
-  return NextResponse.json({ modules: enriched });
+  return NextResponse.json({ modules });
 }

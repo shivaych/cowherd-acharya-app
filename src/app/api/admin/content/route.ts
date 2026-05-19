@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, dbConfigured } from "@/lib/server/supabase";
+import { dbAcharya, dbConfigured } from "@/lib/server/supabase";
 import { requireAdmin } from "@/lib/server/auth";
 
 /**
  * POST /api/admin/content
  *
- * Upserts a content row for (section_id, lang). Body:
+ * Upserts the body for (section_id, lang) in crs_section_tr. Body:
  *   { sectionId, lang, body }
  */
 export async function POST(req: NextRequest) {
@@ -35,23 +35,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid body text" }, { status: 400 });
   }
 
-  // Look up existing row for this (section_id, lang)
-  const { data: existing } = await db
-    .from("cowherd_content")
+  const { data: existing } = await dbAcharya
+    .from("crs_section_tr")
     .select("id")
     .eq("section_id", sectionId)
     .eq("lang", lang)
     .maybeSingle();
 
   if (existing) {
-    const { error } = await db
-      .from("cowherd_content")
-      .update({ body: text, updated_at: new Date().toISOString() })
+    const { error } = await dbAcharya
+      .from("crs_section_tr")
+      .update({ body: text, status: "published" })
       .eq("id", existing.id);
     if (error) return NextResponse.json({ error: "Write failed" }, { status: 502 });
   } else {
-    const { error } = await db
-      .from("cowherd_content")
+    const { error } = await dbAcharya
+      .from("crs_section_tr")
       .insert({ section_id: sectionId, lang, body: text, status: "published" });
     if (error) return NextResponse.json({ error: "Write failed" }, { status: 502 });
   }
