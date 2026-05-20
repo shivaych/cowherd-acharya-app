@@ -15,7 +15,7 @@ SELECT mod.id, 'M03-S2', 2, 1.0 FROM mod ON CONFLICT (module_id, slug) DO NOTHIN
 
 INSERT INTO acharya_cowherd.crs_section_tr (section_id, lang, title, body, status)
 SELECT s.id, 'en', 'Preparing to Milk',
-'Wash your hands before touching the animal. Tie the animal securely — front and back leg. Clean the udder with a clean damp cloth, wiping each teat from base to tip. Discard the first 2-3 squirts from each teat into a strip cup — this forestripping detects mastitis (look for clots, wateriness, or blood) and removes the bacterial-rich first milk. The pre-milking stimulation from cleaning and forestripping triggers oxytocin release, which causes milk let-down. If you skip this, the cow will not give her full milk. The milking area must be clean and calm — noise and disturbance block oxytocin and reduce yield.',
+'Wash your hands before touching the animal. Tie the animal securely — front and back leg. Clean the udder with a clean damp cloth, wiping each teat from base to tip. Discard the first 2-3 squirts from each teat to a strip cup — this forestripping detects mastitis (look for clots, wateriness, or blood) and removes the bacterial-rich first milk. The pre-milking stimulation from cleaning and forestripping triggers oxytocin release, which causes milk let-down. If you skip this, the cow will not give her full milk. The milking area must be clean and calm — noise and disturbance block oxytocin and reduce yield.',
 'published'
 FROM acharya_cowherd.crs_sections s
 JOIN acharya_cowherd.crs_modules m ON s.module_id = m.id
