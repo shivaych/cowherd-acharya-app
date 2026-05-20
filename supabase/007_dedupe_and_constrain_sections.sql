@@ -19,5 +19,11 @@ WHERE s.module_id = older.module_id
   AND s.created_at > older.created_at;
 
 -- Step 2: add the missing unique constraint so future seeds can dedupe.
-ALTER TABLE acharya_cowherd.crs_sections
-  ADD CONSTRAINT crs_sections_module_id_slug_key UNIQUE (module_id, slug);
+-- Wrapped in DO so re-runs are idempotent (ALTER TABLE ADD CONSTRAINT has no IF NOT EXISTS).
+DO $$
+BEGIN
+  ALTER TABLE acharya_cowherd.crs_sections
+    ADD CONSTRAINT crs_sections_module_id_slug_key UNIQUE (module_id, slug);
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
