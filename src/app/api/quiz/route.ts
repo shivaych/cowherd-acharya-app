@@ -73,33 +73,23 @@ The learner has already completed these modules: ${completedIds.join(', ')}.
 - Keep 3 of the 5 questions squarely on ${moduleId} itself; the remaining 1-2 can be cross-module where it adds value.`
     : '';
 
-  const prompt = `Generate exactly 5 multiple-choice questions for NSDC Vegetable Grower training (QP AGR/Q0405), module: ${moduleId}
+  const prompt = `Generate exactly 5 multiple-choice questions for KarmYog Vatika livestock caretaker training, module: ${moduleId}
 
-Each question must test practical knowledge a vegetable grower needs in the field.
+Each question must test practical knowledge a cow and horse caretaker needs on the farm.
 
 ${langInstruction[lang] || langInstruction.bn}${completedBlock}
 
 Module topic mapping:
-- M01-intro: Horticulture sector overview, vegetable grower responsibilities
-- M02-fundamentals: Vegetable classification, agro-climatic zones, plant anatomy
-- M03-land-prep: Site selection, soil types, water sources, topography
-- M04-planting-material: Seeds, seedlings, seed treatment, grafting, storage
-- M05-prep-for-planting: Farm layout, primary/secondary cultivation, seedbed preparation
-- M06-planting: Planting methods, spacing, depth, transplanting, aftercare
-- M07-soil-nutrients: NPK, micro-nutrients, Soil Health Card, FYM, vermicompost, chemical fertilizers, INM
-- M08-weed-control: Weed types, control methods, solarization, critical period 20-45 days
-- M09-pest-disease: Pests (cutworm, aphid, nematode), diseases (leaf spot, late blight, bacterial wilt), IPM hierarchy, bio-pesticides, safety
-- M10-irrigation: Drip (90-95%), sprinkler (70-80%), flood, scheduling, fertigation, water conservation
-- M11-entrepreneurship: B:C ratio, marketing channels, government schemes, record keeping
-- M12-hygiene: Personal hygiene, sanitization, workplace cleanliness
-- M13-safety: PPE, chemical safety, first aid, waste disposal, emergency procedures
-- M14-employability: English, digital skills, communication, entrepreneurship
-- M15 to M18: Cole crops (cauliflower, cabbage) - 15-25C, pH 5.5-7.0, damping off, black leg
-- M19 to M22: Leafy vegetables (spinach, coriander) - deep ploughing, seed treatment, broadcasting
-- M23 to M26: Underground crops (potato, onion) - curing, sprout control, harvest when leaves half dry
-- M27 to M30: Cucurbit crops (cucumber, gourd) - warm 25-35C, pit method, direct sow, trellis
-- M31 to M34: Legume crops (peas, beans) - 3 planting methods, Rhizobium, manure 1 week before
-- M35 to M38: Okra - deep ploughing + planking, raised beds, harvest 5-8cm every 2-3 days, YVMV`;
+- M01-daily-care: Morning/evening shed routine, health observation, fresh water before feed, dung removal, ammonia risk, counting herd
+- M02-feeding: Dry fodder, green fodder, concentrate ratios, mineral blocks, feeding schedule, quantities per body weight
+- M03-milking: Hygienic milking technique, udder preparation, teat dip after milking, mastitis prevention, milk storage
+- M04-cattle-health: FMD, HS, BQ, mastitis, bloat — symptoms, first response, vaccination calendar, when to call vet
+- M05-calf-care: Colostrum in first hour, calf vaccination schedule, weaning age, growth monitoring, deworming
+- M06-horse-stable: Stall size (3.6×3.6m minimum), bedding types (straw/sawdust), ventilation, daily cleaning, water buckets
+- M07-horse-feeding: Hay (60-70% of diet), oats/concentrates, 2-3 feeds daily, colic prevention, water before/after feeding
+- M08-horse-health: Colic signs (pawing, flank watching, rolling) and first response, laminitis, tetanus, worm control, thrush
+- M09-grooming: Grooming sequence (head to tail), curry comb, body brush, dandy brush, hoof pick, hoof oil, farrier every 6-8 weeks
+- M10-safety: Safe approach from shoulder angle, halter fitting, lead rope use, kick zones, cattle crush, emergency tie-up`;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 20000);

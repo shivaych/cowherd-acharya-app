@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, usingServiceRole, effectiveKeyRole } from "@/lib/server/supabase";
+import { requireAdmin } from "@/lib/server/auth";
 
-/**
- * Safe diagnostic endpoint — presence/length only, never the values.
- *
- * curl http://localhost:3000/api/debug/env
- */
 export async function GET() {
+  const guard = await requireAdmin();
+  if (guard instanceof NextResponse) return guard;
   const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "";
   const adminPassword = process.env.ADMIN_PASSWORD || "";
   const sessionSecret = process.env.SESSION_SECRET || "";

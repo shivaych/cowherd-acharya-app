@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db, dbConfigured } from "@/lib/server/supabase";
+import { db, dbAcharya, dbConfigured } from "@/lib/server/supabase";
 import { requireAdmin } from "@/lib/server/auth";
 import { memoCache } from "@/lib/server/cache";
 
@@ -13,16 +13,14 @@ export async function GET() {
     });
   }
 
-  // Counts don't need to be fresh to the second. A 30s server-side cache
-  // collapses this 6-query page-load into a sub-5ms hit for any repeat view.
   const stats = await memoCache("admin:stats", 30, async () => {
     const [modules, sections, content, videos, learners, quizzes] = await Promise.all([
-      db.from("cowherd_modules").select("id", { count: "exact", head: true }),
-      db.from("cowherd_sections").select("id", { count: "exact", head: true }),
-      db.from("cowherd_content").select("id", { count: "exact", head: true }),
-      db.from("cowherd_videos").select("id", { count: "exact", head: true }),
-      db.from("cowherd_learners").select("id", { count: "exact", head: true }),
-      db.from("cowherd_quiz_attempts").select("id", { count: "exact", head: true }),
+      dbAcharya.from("crs_modules").select("id", { count: "exact", head: true }).eq("is_deleted", false),
+      dbAcharya.from("crs_sections").select("id", { count: "exact", head: true }).eq("is_deleted", false),
+      dbAcharya.from("crs_section_tr").select("id", { count: "exact", head: true }).eq("status", "published"),
+      dbAcharya.from("crs_videos").select("id", { count: "exact", head: true }).eq("is_deleted", false),
+      db.from("mst_users").select("id", { count: "exact", head: true }).eq("is_deleted", false),
+      db.from("log_quiz").select("id", { count: "exact", head: true }),
     ]);
     return {
       modules: modules.count || 0,
