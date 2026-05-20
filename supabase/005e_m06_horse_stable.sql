@@ -7,7 +7,7 @@
 
 WITH mod AS (SELECT id FROM acharya_cowherd.crs_modules WHERE slug='M06-horse-stable')
 INSERT INTO acharya_cowherd.crs_sections (module_id, slug, sort_order, estimated_hours)
-SELECT mod.id, 'M06-S1', 1, 1.5 FROM mod ON CONFLICT DO NOTHING;
+SELECT mod.id, 'M06-S1', 1, 1.5 FROM mod ON CONFLICT (module_id, slug) DO NOTHING;
 
 INSERT INTO acharya_cowherd.crs_section_tr (section_id, lang, title, body, status)
 SELECT s.id, 'en', 'Stable Design and Daily Cleaning',
