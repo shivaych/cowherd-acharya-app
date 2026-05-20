@@ -42,7 +42,7 @@ ON CONFLICT (section_id, lang) DO NOTHING;
 
 INSERT INTO acharya_cowherd.crs_section_tr (section_id, lang, title, body, status)
 SELECT s.id, 'en', 'Vaccination and Weaning',
-'Vaccination schedule for calves: Day 1 — navel dressing (iodine solution). Week 2 — FMD first dose. Week 4 — BQ and HS first dose. Week 8 — FMD booster. Week 12 — BQ and HS booster. Deworming at 2 weeks, then every 3 months. Weaning at 8-12 weeks: start introducing calf starter (calf pellets) from week 2-3, 100-200 g daily, increasing to 500-700 g by week 8. Good calf starter intake at weaning means the calf rumen is ready — this is the key to smooth weaning. Weaning is complete when the calf eats at least 500 g concentrate per day for 3 consecutive days. After weaning, continue deworming every 3 months and monitor growth with weekly weight checks if possible.',
+'Vaccination schedule for calves: Day 1 — navel dressing (iodine solution). Week 2 — FMD first dose. Week 4 — BQ and HS first dose. Week 8 — FMD booster. Week 12 — BQ and HS booster. Deworming after two weeks, then every 3 months. Weaning at 8-12 weeks: start introducing calf starter (calf pellets) from week 2-3, 100-200 g daily, increasing to 500-700 g by week 8. Good calf starter intake at weaning means the calf rumen is ready — this is the key to smooth weaning. Weaning is complete when the calf eats at least 500 g concentrate per day for three consecutive days. After weaning, continue deworming every 3 months and monitor growth with weekly weight checks if possible.',
 'published'
 FROM acharya_cowherd.crs_sections s
 JOIN acharya_cowherd.crs_modules m ON s.module_id = m.id
